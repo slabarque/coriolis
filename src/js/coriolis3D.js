@@ -7,6 +7,7 @@ const canvas = document.querySelector('#c');
 const mainView = document.querySelector('#mainView');
 const observerView = document.querySelector('#observerView');
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+const loader = new THREE.TextureLoader();
 
 const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000);
 camera.position.z = 5;
@@ -19,11 +20,13 @@ const settings = {
     showCameraHelper: false,
     sphereRotationSpeed: 1600,
     particleSpeed: 100,
+    showEarth: false
 
 };
 gui.add(settings, "showCameraHelper").name("Show observer camera");
 gui.add(settings, "sphereRotationSpeed", 100, 5000).name("Rotation speed");
 gui.add(settings, "particleSpeed", 10, 1000).name("Wind speed");
+gui.add(settings, "showEarth").name("Show earth");
 
 const observerCamera = new THREE.PerspectiveCamera(100, 2, 0.1, 1000);
 observerCamera.position.z = 1.2;
@@ -44,9 +47,16 @@ scene.add(cameraHelper);
 //Sphere
 const sphereGeometry = new THREE.IcosahedronGeometry(1, 8);
 const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x5d5d5d, wireframe: true });
-const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+const earthTexture = loader.load("../textures/earthmap1k.jpg");
+const sphereEarthMaterial = new THREE.MeshBasicMaterial({
+    map: earthTexture
+});
+const sphereMesh = new THREE.Mesh(sphereGeometry, sphereEarthMaterial);
 const sphereGroup = new THREE.Group();
-sphereGroup.add(sphereMesh);
+const earthGroup = new THREE.Group();
+earthGroup.add(sphereMesh);
+earthGroup.rotation.x = 90 * Math.PI / 180;// = 23.4 * Math.Pi / 180;
+sphereGroup.add(earthGroup);
 // const observer = new THREE.BufferGeometry();
 // observer.setAttribute("position",
 //     new THREE.Float32BufferAttribute([-0.1, 0.1, 0,
@@ -59,6 +69,10 @@ sphereGroup.add(observerCamera);
 scene.add(sphereGroup);
 function rotateSphere() {
     sphereGroup.rotation.z += settings.sphereRotationSpeed / 100000;
+    if (settings.showEarth && sphereMesh.material.wireframe)
+        sphereMesh.material = sphereEarthMaterial;
+    if (!settings.showEarth && !sphereMesh.material.wireframe)
+        sphereMesh.material = sphereMaterial;
 }
 
 //Starts
@@ -69,14 +83,13 @@ scene.add(stars);
 const particleGeometry = new THREE.SphereGeometry(0.05, 16, 16);
 const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xcc0000 });
 const particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
-let particleLat = 90.0;
+let particleLat = 0;
 const initialPosition = calculatePosition(particleLat, 0, 1);
 console.log(initialPosition);
-particleMesh.position.set(initialPosition.x,initialPosition.y,initialPosition.z);//.set(0, 1, 0);
-//particleMesh.position.set(0, 1, 0);
+particleMesh.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
 scene.add(particleMesh);
 function moveParticleCircle() {
-    particleLat += Math.PI / 180 * (settings.particleSpeed / 10);
+    particleLat -= Math.PI / 180 * (settings.particleSpeed / 10);
     particleLat = particleLat % 360;
     const position = calculatePosition(particleLat, 0, 1);
     console.log(particleLat);
@@ -92,7 +105,7 @@ function calculatePosition(lat, lon, radius) {
     // const x = Math.round(radius * Math.cos(phi) * Math.sin(theta), 100);
     // const y = Math.round(radius * Math.sin(phi), 100);
     // const z = Math.round(radius * Math.cos(phi) * Math.cos(theta), 100);
-    const x =radius * Math.cos(phi) * Math.sin(theta);
+    const x = radius * Math.cos(phi) * Math.sin(theta);
     const y = radius * Math.sin(phi);
     const z = radius * Math.cos(phi) * Math.cos(theta);
     return new THREE.Vector3(x, y, z);
