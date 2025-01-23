@@ -14,7 +14,8 @@ export default {
         rollupOptions: {
             input: {
                 main: './src/index.html',
-                coriolis2D: './src/coriolis2D.html'
+                coriolis2D: './src/coriolis2D.html',
+                coriolis3D: './src/coriolis3D.html'
             }
         }
     },
