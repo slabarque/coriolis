@@ -4,5 +4,22 @@
   },
   "devDependencies": {
     "vite": "^6.0.9"
-  }
+  },
+  "name": "coriolis",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slabarque/coriolis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slabarque/coriolis/issues"
+  },
+  "homepage": "https://github.com/slabarque/coriolis#readme",
+  "description": ""
 }
