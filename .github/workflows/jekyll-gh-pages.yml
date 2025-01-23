@@ -40,6 +40,9 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Copy required files from node_modules
+        run: mkdir -p assets/js && cp node_modules/three/build/* assets/js/
+        
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
