@@ -1,17 +1,29 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import getStarfield from './getStarfield.js';
 
 const canvas = document.querySelector('#c');
-const view1Elem = document.querySelector('#mainView');
-const view2Elem = document.querySelector('#observerView');
+const mainView = document.querySelector('#mainView');
+const observerView = document.querySelector('#observerView');
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
 
 const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000);
 camera.position.z = 5;
-const controls = new OrbitControls(camera, view1Elem);
+const controls = new OrbitControls(camera, mainView);
 controls.target.set(0, 0, 0);
 controls.update();
+
+const gui = new GUI({container:document.getElementById("gui")});
+const settings = {
+    showCameraHelper : true,
+    circleRotationSpeed : 0.005,
+    particleSpeed : 1,
+
+};
+gui.add(settings, "showCameraHelper");
+gui.add(settings, "circleRotationSpeed", 0.001, 0.1);
+gui.add(settings, "particleSpeed", 0.1, 10);
 
 const observerCamera = new THREE.PerspectiveCamera(100, 2, 0.1, 1000);
 observerCamera.position.z = 0.2;
@@ -33,7 +45,6 @@ scene.add(cameraHelper);
 const circleGeometry = new THREE.CircleGeometry(1, 32);
 const circleMaterial = new THREE.MeshBasicMaterial({ color: 0x5d5d5d, wireframe: true });
 const circleMesh = new THREE.Mesh(circleGeometry, circleMaterial);
-const circleRotationSpeed = 0.005;
 const circleGroup = new THREE.Group();
 circleGroup.add(circleMesh);
 // const observer = new THREE.BufferGeometry();
@@ -47,7 +58,7 @@ circleGroup.add(circleMesh);
 circleGroup.add(observerCamera);
 scene.add(circleGroup);
 function rotateCircle() {
-    circleGroup.rotation.z += circleRotationSpeed;
+    circleGroup.rotation.z += settings.circleRotationSpeed;
 }
 
 //Starts
@@ -61,9 +72,8 @@ const particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
 particleMesh.position.set(0, 0, 0.0);
 scene.add(particleMesh);
 let particleSmoothWave = 0.0;
-const particleSpeed = 1;
 function moveParticleSineWave() {
-    particleSmoothWave += Math.PI / 180 * particleSpeed;
+    particleSmoothWave += Math.PI / 180 * settings.particleSpeed;
     particleSmoothWave = particleSmoothWave % 360;
     particleMesh.position.y = Math.sin(particleSmoothWave);
 }
@@ -145,40 +155,27 @@ function render() {
 
     // render the original view
     {
+        const aspect = setScissorForElement(mainView);
 
-        const aspect = setScissorForElement(view1Elem);
-
-        // adjust the camera for this aspect
         camera.aspect = aspect;
         camera.updateProjectionMatrix();
         //cameraHelper.update();
 
-        // don't draw the camera helper in the original view
-        //cameraHelper.visible = false;
+        cameraHelper.visible = settings.showCameraHelper;
 
-        //scene.background.set(0x000000);
-
-        // render
         renderer.render(scene, camera);
-
     }
 
     // render from the 2nd camera
     {
+        const aspect = setScissorForElement(observerView);
 
-        const aspect = setScissorForElement(view2Elem);
-
-        // adjust the camera for this aspect
         observerCamera.aspect = aspect;
         observerCamera.updateProjectionMatrix();
 
-        // draw the camera helper in the 2nd view
-        //cameraHelper.visible = true;
-
-        //scene.background.set(0x004040);
+        cameraHelper.visible = false;
 
         renderer.render(scene, observerCamera);
-
     }
 }
 

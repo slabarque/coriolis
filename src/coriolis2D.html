@@ -12,13 +12,18 @@
 	<div>
 		<canvas id="c" class="d-block w-100 h-100"></canvas>
 		<div class="position-absolute d-flex w-100 h-100 fixed-top">
+			<div id="gui" class="position-absolute"></div>
 			<div id="mainView" class="w-100 h-100" tabindex="1"></div>
 			<div id="observerView" class="w-100 h-100" tabindex="2"></div>
 		</div>
 	</div>
-	<!-- <div class="split">
-		<div id="mainView w-100 h-100" tabindex="1"></div>
-		<div id="observerView w-100 h-100" tabindex="2"></div>
+	<!-- <div class="splitPane">
+		<canvas id="c"></canvas>
+		<div class="split">
+			<div id="gui"></div>
+			<div id="mainView" tabindex="1"></div>
+			<div id="observerView" tabindex="2"></div>
+		</div>
 	</div> -->
 	<script type="module" src="./js/main.js"></script>
 	<script type="module" src="./js/coriolis2D.js"></script>
