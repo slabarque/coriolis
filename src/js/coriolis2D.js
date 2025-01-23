@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import getStarfield from './src/getStarfield.js';
+import getStarfield from './getStarfield.js';
 
 const canvas = document.querySelector('#c');
-const view1Elem = document.querySelector('#view1');
-const view2Elem = document.querySelector('#view2');
+const view1Elem = document.querySelector('#mainView');
+const view2Elem = document.querySelector('#observerView');
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
 
 const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000);

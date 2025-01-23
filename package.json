@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "bootstrap": "^5.3.3",
+    "sass": "^1.83.4",
     "three": "^0.172.0"
   },
   "devDependencies": {
