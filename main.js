@@ -58,7 +58,7 @@ scene.add(stars);
 const particleGeometry = new THREE.SphereGeometry(0.05, 16, 16);
 const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xcc0000 });
 const particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
-particleMesh.position.set(0, 0, 0.05);
+particleMesh.position.set(0, 0, 0.0);
 scene.add(particleMesh);
 let particleSmoothWave = 0.0;
 const particleSpeed = 1;
