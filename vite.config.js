@@ -8,6 +8,16 @@ export default {
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
         }
     },
+    build: {
+        outDir: "../dist",
+        emptyOutDir: true,
+        rollupOptions: {
+            input: {
+                main: './src/index.html',
+                coriolis2D: './src/coriolis2D.html'
+            }
+        }
+    },
     server: {
         port: 5173,
         hot: true
