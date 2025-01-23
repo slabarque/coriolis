@@ -16,14 +16,14 @@ controls.update();
 
 const gui = new GUI({container:document.getElementById("gui")});
 const settings = {
-    showCameraHelper : true,
-    circleRotationSpeed : 0.005,
-    particleSpeed : 1,
+    showCameraHelper : false,
+    circleRotationSpeed : 1600,
+    particleSpeed : 100,
 
 };
-gui.add(settings, "showCameraHelper");
-gui.add(settings, "circleRotationSpeed", 0.001, 0.1);
-gui.add(settings, "particleSpeed", 0.1, 10);
+gui.add(settings, "showCameraHelper").name("Show observer camera");
+gui.add(settings, "circleRotationSpeed", 100, 5000).name("Rotation speed");
+gui.add(settings, "particleSpeed", 10, 1000).name("Wind speed");
 
 const observerCamera = new THREE.PerspectiveCamera(100, 2, 0.1, 1000);
 observerCamera.position.z = 0.2;
@@ -58,7 +58,7 @@ circleGroup.add(circleMesh);
 circleGroup.add(observerCamera);
 scene.add(circleGroup);
 function rotateCircle() {
-    circleGroup.rotation.z += settings.circleRotationSpeed;
+    circleGroup.rotation.z += settings.circleRotationSpeed/100000;
 }
 
 //Starts
@@ -73,7 +73,7 @@ particleMesh.position.set(0, 0, 0.0);
 scene.add(particleMesh);
 let particleSmoothWave = 0.0;
 function moveParticleSineWave() {
-    particleSmoothWave += Math.PI / 180 * settings.particleSpeed;
+    particleSmoothWave += Math.PI / 180 * (settings.particleSpeed/1000);
     particleSmoothWave = particleSmoothWave % 360;
     particleMesh.position.y = Math.sin(particleSmoothWave);
 }
@@ -87,7 +87,7 @@ observedTrailGeometry.setAttribute(
 );
 const observedTrailMesh = new THREE.Line(observedTrailGeometry, observedTrailMaterial);
 circleGroup.add(observedTrailMesh);
-const observedTrailLength = 100;
+const observedTrailLength = 500;
 function updateObservedTrail() {
     const position = observedTrailMesh.geometry.getAttribute("position");
     const trailPositions = [...position.array];
